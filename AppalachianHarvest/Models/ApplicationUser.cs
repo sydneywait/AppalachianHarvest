@@ -17,7 +17,7 @@ namespace AppalachianHarvest.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        public byte ProfilePicture { get; set; }
+        public byte[] ProfilePicture { get; set; }
         public bool IsCustomer { get; set; }
         public bool IsEmployee { get; set; }
         public bool IsSupervisor { get; set; }

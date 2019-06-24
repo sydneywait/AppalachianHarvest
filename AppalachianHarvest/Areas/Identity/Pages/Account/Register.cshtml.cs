@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AppalachianHarvest.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -48,10 +51,13 @@ namespace AppalachianHarvest.Areas.Identity.Pages.Account
             [Required]
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
-            public byte ProfilePicture { get; set; }
+            public byte[] ProfilePicture { get; set; }
             public bool IsCustomer { get; set; }
             public bool IsEmployee { get; set; }
             public bool IsSupervisor { get; set; }
+            [NotMapped]
+            public IFormFile ImageUpload { get; set; }
+
 
 
 
@@ -83,7 +89,16 @@ namespace AppalachianHarvest.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { FirstName = Input.FirstName, LastName = Input.LastName, UserName = Input.Email, Email = Input.Email, ProfilePicture=Input.ProfilePicture };
+                var user = new ApplicationUser { FirstName = Input.FirstName, LastName = Input.LastName, UserName = Input.Email, Email = Input.Email };
+                if (Input.ImageUpload!= null)
+                {
+                    //Store the image in a temp location as it comes back from the uploader
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await Input.ImageUpload.CopyToAsync(memoryStream);
+                        user.ProfilePicture = memoryStream.ToArray();
+                    }
+                }
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
