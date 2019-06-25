@@ -40,6 +40,67 @@ namespace AppalachianHarvest.Data
             //user.PasswordHash = passwordHash.HashPassword(user, "Admin8*");
             //modelBuilder.Entity<ApplicationUser>().HasData(user);
 
+            modelBuilder.Entity<Order>()
+                .Property(b => b.OrderDate)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Product>()
+             .Property(b => b.Added)
+             .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<ProductType>().HasData(
+               new ProductType()
+               {
+                   ProductTypeId = 1,
+                   Description = "Fruit"
+               },
+               new ProductType()
+               {
+                   ProductTypeId = 2,
+                   Description= "Vegetable"
+               },
+               new ProductType()
+               {
+                   ProductTypeId = 3,
+                   Description= "Leafy Green"
+               },
+               new ProductType()
+               {
+                   ProductTypeId = 4,
+                   Description= "Canned Good"
+               },
+               new ProductType()
+               {
+                   ProductTypeId = 5,
+                   Description= "Baked Good"
+               },
+               new ProductType()
+               {
+                   ProductTypeId = 6,
+                   Description= "Meat"
+               },
+               new ProductType()
+               {
+                   ProductTypeId = 7,
+                   Description= "Dairy-Fresh"
+               },
+               new ProductType()
+               {
+                   ProductTypeId = 8,
+                   Description= "Dairy-Frozen"
+               },
+               new ProductType()
+               {
+                   ProductTypeId = 9,
+                   Description= "Beauty"
+               },
+               new ProductType()
+               {
+                   ProductTypeId = 10,
+                   Description= "Soap"
+               }
+           );
+
 
         }
     }

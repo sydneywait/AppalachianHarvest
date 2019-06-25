@@ -46,7 +46,11 @@ namespace AppalachianHarvest.Models
         [Display(Name = "Zip Code")]
         public int ZipCode { get; set; }
         public byte[] ProducerImage { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
+        public Producer()
+        {
+            IsActive = true;
+        }
 
         public ICollection<Product> Products { get; set; }
     }

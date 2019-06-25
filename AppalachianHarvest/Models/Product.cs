@@ -37,11 +37,18 @@ namespace AppalachianHarvest.Models
         public bool IsOrganic { get; set; }
         [Required]
         public bool IsActive { get; set; }
+        public Product()
+        {
+            IsActive = true;
+        }
+
         [Required]
         [DataType(DataType.Date)]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Display(Name = "Date Added")]
         public DateTime Added { get; set; }
+
+        public ICollection<Order> Orders { get; set; }
 
     }
 }
