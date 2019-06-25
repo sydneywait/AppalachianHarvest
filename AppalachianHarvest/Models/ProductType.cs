@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 
 namespace AppalachianHarvest.Models
 {
-    public class Shelf
+    public class ProductType
     {
-        public int ShelfId { get; set; }
-        public string Description { get; set; } 
     }
 }
