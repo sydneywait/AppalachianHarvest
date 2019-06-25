@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace AppalachianHarvest.Data.Migrations
+namespace AppalachianHarvest.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class applicationuser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,7 +40,14 @@ namespace AppalachianHarvest.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    ProfilePicture = table.Column<byte>(nullable: true),
+                    IsCustomer = table.Column<bool>(nullable: true),
+                    IsEmployee = table.Column<bool>(nullable: true),
+                    IsSupervisor = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
