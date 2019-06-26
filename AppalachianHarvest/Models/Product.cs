@@ -41,6 +41,7 @@ namespace AppalachianHarvest.Models
 
         public byte[] Image { get; set; }
         [NotMapped]
+        [Display(Name = "Upload Image")]
         public IFormFile ImageUpload { get; set; }
         [Required]
         [Display(Name = "Organic")]

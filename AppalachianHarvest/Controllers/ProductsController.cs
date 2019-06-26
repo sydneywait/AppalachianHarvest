@@ -55,12 +55,9 @@ namespace AppalachianHarvest.Controllers
 
             CreateEditProductViewModel productModel = new CreateEditProductViewModel();
 
-            // Add a '0' options to the select lists
 
-            productModel.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
-            productModel.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"),"product type");
-            productModel.Shelves = Add0Dropdown(new SelectList(_context.Set<Shelf>(), "ShelfId", "Description"), "product location");
-
+            AddDropdowns(productModel);
+            
             return View(productModel);
         }
 
@@ -88,9 +85,10 @@ namespace AppalachianHarvest.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            productModel.Producers = new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName");
-            productModel.ProductTypes = new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description");
-            productModel.Shelves = new SelectList(_context.Set<Shelf>(), "ShelfId", "Description");
+
+            AddDropdowns(productModel);
+          
+
             return View(productModel);
 
         }
@@ -103,15 +101,18 @@ namespace AppalachianHarvest.Controllers
                 return NotFound();
             }
 
+
             var product = await _context.Product.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
-            ViewData["ProducerId"] = new SelectList(_context.Set<Producer>(), "ProducerId", "Address", product.ProducerId);
-            ViewData["ProductTypeId"] = new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description", product.ProductTypeId);
-            ViewData["ShelfId"] = new SelectList(_context.Set<Shelf>(), "ShelfId", "Description", product.ShelfId);
-            return View(product);
+
+            CreateEditProductViewModel productModel = new CreateEditProductViewModel();
+            productModel.Product = product;
+            AddDropdowns(productModel);
+
+            return View(productModel);
         }
 
         // POST: Products/Edit/5
@@ -119,9 +120,9 @@ namespace AppalachianHarvest.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,ProducerId,ProductTypeId,ShelfId,Quantity,Price,Image,IsOrganic,IsActive,Added")] Product product)
+        public async Task<IActionResult> Edit(int id, CreateEditProductViewModel productModel)
         {
-            if (id != product.ProductId)
+            if (id != productModel.Product.ProductId)
             {
                 return NotFound();
             }
@@ -130,12 +131,22 @@ namespace AppalachianHarvest.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    if (productModel.Product.ImageUpload != null)
+                    {
+                        //Store the image in a temp location as it comes back from the uploader
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await productModel.Product.ImageUpload.CopyToAsync(memoryStream);
+                            productModel.Product.Image = memoryStream.ToArray();
+                        }
+                    }
+
+                    _context.Update(productModel.Product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ProductExists(productModel.Product.ProductId))
                     {
                         return NotFound();
                     }
@@ -146,10 +157,9 @@ namespace AppalachianHarvest.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProducerId"] = new SelectList(_context.Set<Producer>(), "ProducerId", "Address", product.ProducerId);
-            ViewData["ProductTypeId"] = new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description", product.ProductTypeId);
-            ViewData["ShelfId"] = new SelectList(_context.Set<Shelf>(), "ShelfId", "Description", product.ShelfId);
-            return View(product);
+            AddDropdowns(productModel);
+
+            return View(productModel);
         }
 
         // GET: Products/Delete/5
@@ -179,7 +189,8 @@ namespace AppalachianHarvest.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
+            product.IsActive = false;
+            _context.Product.Update(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -189,6 +200,12 @@ namespace AppalachianHarvest.Controllers
             return _context.Product.Any(e => e.ProductId == id);
         }
 
+        public void AddDropdowns(CreateEditProductViewModel productModel)
+        {
+            productModel.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
+            productModel.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"), "product type");
+            productModel.Shelves = Add0Dropdown(new SelectList(_context.Set<Shelf>(), "ShelfId", "Description"), "product location");
+        }
         public static SelectList Add0Dropdown(SelectList selectList, string optionType)
         {
 
