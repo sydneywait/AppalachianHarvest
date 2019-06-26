@@ -10,16 +10,18 @@ namespace AppalachianHarvest.Models
     public class Product
     {
         [Key]
+        [Display(Name="Product")]
         public int ProductId { get; set; }
         [Required]
         [StringLength(55, ErrorMessage = "Please shorten the product name to 55 characters")]
         public string Name { get; set; }
         [Required]
+        [Display(Name = "Producer")]
         public int ProducerId { get; set; }
         public Producer Producer { get; set; }
 
         [Required(ErrorMessage = "Please Select a Product Category")]
-        [Display(Name = "Product Category")]
+        [Display(Name = "Product Type")]
         public int ProductTypeId { get; set; }
         public ProductType ProductType { get; set; }
         [Required]
@@ -47,6 +49,10 @@ namespace AppalachianHarvest.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Display(Name = "Date Added")]
         public DateTime Added { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Expiration Date")]
+        public DateTime ExpirationDate { get; set; }
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
 
