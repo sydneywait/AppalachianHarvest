@@ -8,3 +8,6 @@ To register a new user, click on the 'register' affordance in the nav bar.  You 
 
 ### Registered Users
 To log in, click on the affordance in the Nav bar and enter the credentials you provided when you created your account.  You can log out at any time by clicking the 'log out' affordance in the upper right corner of the application.
+
+## Products
+Employees can add products to the market by navigating to the 'Products' tab in the nav bar and clicking on the affordance  to add a new product.  Enter all the information for the product and click 'submit'.  The product will be added and the image will show in the index view.  Note:  Adding an image is option but all other fields are required.

@@ -282,5 +282,7 @@ namespace AppalachianHarvest.Data
             );
 
         }
+
+        public DbSet<AppalachianHarvest.Models.Product> Product { get; set; }
     }
 }
