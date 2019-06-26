@@ -26,9 +26,13 @@ namespace AppalachianHarvest.Models
         public int ProductTypeId { get; set; }
         public ProductType ProductType { get; set; }
         [Required]
+        [Display(Name = "Shelf")]
+
         public int ShelfId { get; set; }
         public Shelf Shelf { get; set; }
         [Required]
+        [Display(Name = "Qty.")]
+
         public int Quantity { get; set; }
         [Required]
         [DisplayFormat(DataFormatString = "{0:C}")]
@@ -39,6 +43,8 @@ namespace AppalachianHarvest.Models
         [NotMapped]
         public IFormFile ImageUpload { get; set; }
         [Required]
+        [Display(Name = "Organic")]
+
         public bool IsOrganic { get; set; }
         [Required]
         public bool IsActive { get; set; }
@@ -50,11 +56,11 @@ namespace AppalachianHarvest.Models
         [Required]
         [DataType(DataType.Date)]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [Display(Name = "Date Added")]
+        [Display(Name = "Added")]
         public DateTime Added { get; set; }
 
         [NotMapped]
-        [Display(Name = "Expiration Date")]
+        [Display(Name = "Expires")]
         public DateTime ExpirationDate { get; set; }
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
