@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppalachianHarvest.Data;
 using AppalachianHarvest.Models;
+using AppalachianHarvest.Models.ViewModels;
+using System.IO;
 
 namespace AppalachianHarvest.Controllers
 {
@@ -50,10 +52,13 @@ namespace AppalachianHarvest.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["ProducerId"] = new SelectList(_context.Set<Producer>(), "ProducerId", "Address");
-            ViewData["ProductTypeId"] = new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description");
-            ViewData["ShelfId"] = new SelectList(_context.Set<Shelf>(), "ShelfId", "Description");
-            return View();
+
+            CreateEditProductViewModel productModel = new CreateEditProductViewModel();
+
+            productModel.Producers = new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName");
+            productModel.ProductTypes = new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description");
+            productModel.Shelves = new SelectList(_context.Set<Shelf>(), "ShelfId", "Description");
+            return View(productModel);
         }
 
         // POST: Products/Create
@@ -61,18 +66,30 @@ namespace AppalachianHarvest.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,ProducerId,ProductTypeId,ShelfId,Quantity,Price,Image,IsOrganic,IsActive,Added")] Product product)
+        public async Task<IActionResult> Create(CreateEditProductViewModel productModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+
+                if (productModel.Product.ImageUpload!= null)
+                {
+                    //Store the image in a temp location as it comes back from the uploader
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await productModel.Product.ImageUpload.CopyToAsync(memoryStream);
+                        productModel.Product.Image = memoryStream.ToArray();
+                    }
+                }
+
+                _context.Add(productModel.Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProducerId"] = new SelectList(_context.Set<Producer>(), "ProducerId", "Address", product.ProducerId);
-            ViewData["ProductTypeId"] = new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description", product.ProductTypeId);
-            ViewData["ShelfId"] = new SelectList(_context.Set<Shelf>(), "ShelfId", "Description", product.ShelfId);
-            return View(product);
+            productModel.Producers = new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName");
+            productModel.ProductTypes = new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description");
+            productModel.Shelves = new SelectList(_context.Set<Shelf>(), "ShelfId", "Description");
+            return View(productModel);
+
         }
 
         // GET: Products/Edit/5
