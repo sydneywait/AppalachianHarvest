@@ -16,7 +16,7 @@ namespace AppalachianHarvest.Models
         [Required]
         [StringLength(55, ErrorMessage = "Please shorten the product name to 55 characters")]
         public string Name { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Please Select a Producer")]
         [Display(Name = "Producer")]
         public int ProducerId { get; set; }
         public Producer Producer { get; set; }
@@ -25,8 +25,8 @@ namespace AppalachianHarvest.Models
         [Display(Name = "Product Type")]
         public int ProductTypeId { get; set; }
         public ProductType ProductType { get; set; }
-        [Required]
-        [Display(Name = "Shelf")]
+        [Required(ErrorMessage = "Please Select a location in the store")]
+        [Display(Name = "Location")]
 
         public int ShelfId { get; set; }
         public Shelf Shelf { get; set; }

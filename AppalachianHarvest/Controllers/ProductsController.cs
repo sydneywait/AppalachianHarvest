@@ -55,9 +55,12 @@ namespace AppalachianHarvest.Controllers
 
             CreateEditProductViewModel productModel = new CreateEditProductViewModel();
 
-            productModel.Producers = new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName");
-            productModel.ProductTypes = new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description");
-            productModel.Shelves = new SelectList(_context.Set<Shelf>(), "ShelfId", "Description");
+            // Add a '0' options to the select lists
+
+            productModel.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
+            productModel.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"),"product type");
+            productModel.Shelves = Add0Dropdown(new SelectList(_context.Set<Shelf>(), "ShelfId", "Description"), "product location");
+
             return View(productModel);
         }
 
@@ -184,6 +187,26 @@ namespace AppalachianHarvest.Controllers
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
+        }
+
+        public static SelectList Add0Dropdown(SelectList selectList, string optionType)
+        {
+
+            SelectListItem firstItem = new SelectListItem()
+            {
+                Text = $"Select a { optionType }"
+            };
+            List<SelectListItem> newList = selectList.ToList();
+            newList.Insert(0, firstItem);
+
+            var selectedItem = newList.FirstOrDefault(item => item.Selected);
+            var selectedItemValue = String.Empty;
+            if (selectedItem != null)
+            {
+                selectedItemValue = selectedItem.Value;
+            }
+
+            return new SelectList(newList, "Value", "Text", selectedItemValue);
         }
     }
 }
