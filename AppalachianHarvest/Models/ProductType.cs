@@ -13,6 +13,7 @@ namespace AppalachianHarvest.Models
         [Required]
         public string Description { get; set; }
         [Required]
-        public TimeSpan ExpirationTime { get; set; }
+        // stored as the number of days in sql.  Need to convert to Timespan when working with it
+        public int? TimeToExpire { get; set; }
     }
 }

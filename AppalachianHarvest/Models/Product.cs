@@ -48,7 +48,7 @@ namespace AppalachianHarvest.Models
         [Display(Name = "Date Added")]
         public DateTime Added { get; set; }
 
-        public ICollection<Order> Orders { get; set; }
+        public virtual ICollection<OrderProduct> OrderProducts { get; set; }
 
     }
 }

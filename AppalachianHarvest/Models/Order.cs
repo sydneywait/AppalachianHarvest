@@ -26,7 +26,8 @@ namespace AppalachianHarvest.Models
         [Display(Name = "Scheduled Pick-up")]
         public DateTime PickupDate { get; set; }
 
-        public ICollection<Product> Products { get; set; }
+        public virtual ICollection<OrderProduct> OrderProducts { get; set; }
+
 
     }
 }
