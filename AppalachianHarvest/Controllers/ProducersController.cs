@@ -7,16 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppalachianHarvest.Data;
 using AppalachianHarvest.Models;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace AppalachianHarvest.Controllers
 {
     public class ProducersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ProducersController(ApplicationDbContext context)
+
+        public ProducersController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
+
         }
 
         // GET: Producers
@@ -54,10 +60,21 @@ namespace AppalachianHarvest.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProducerId,FirstName,LastName,BusinessName,Phone,Email,Address,City,State,ZipCode,ProducerImage,IsActive")] Producer producer)
+        public async Task<IActionResult> Create([Bind("ProducerId,FirstName,LastName,BusinessName,Phone,Email,Address,City,State,ZipCode,ImageUpload,IsActive")] Producer producer)
         {
             if (ModelState.IsValid)
             {
+
+                if (producer.ImageUpload != null)
+                {
+                    //Store the image in a temp location as it comes back from the uploader
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await producer.ImageUpload.CopyToAsync(memoryStream);
+                        producer.ProducerImage = memoryStream.ToArray();
+                    }
+                }
+                producer.IsActive = true;
                 _context.Add(producer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

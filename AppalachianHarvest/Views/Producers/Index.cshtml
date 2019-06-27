@@ -1,95 +1,47 @@
 ﻿@model IEnumerable<AppalachianHarvest.Models.Producer>
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Producers</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Add a Producer</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BusinessName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ZipCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProducerImage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BusinessName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ZipCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProducerImage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProducerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProducerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProducerId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+ 
+<div class="card-deck">
+    @foreach (var item in Model)
+    {
+        //var imgSrc = _env.WebRootFileProvider.GetFileInfo("Images/farmPlaceholder.jpg")?.PhysicalPath;
+        var imgSrc = Url.Content("Images/farmPlaceholder.jpg");
+
+
+            @if (item.ProducerImage != null)
+        {
+
+            var base64 = Convert.ToBase64String(item.ProducerImage);
+            imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+
+
+        }
+        <div class="card">
+            <div class="card-header">
+                <img class="card-img-top" src="@imgSrc" alt="Card image cap">
+            </div>
+            <div class="card-block">
+                <h4 class="card-title">@item.BusinessName</h4>
+                <p class="card-text">@item.FullName</p>
+                <p class="card-text">
+                    @item.Address<br>@item.City, @item.State @item.ZipCode
+                </p>
+
+                <a asp-action="Details" asp-route-id="@item.ProducerId">Details</a> 
+            </div>
+        </div>
+    }
+</div>

@@ -45,7 +45,8 @@ namespace AppalachianHarvest.Models
         [Required]
         public string City { get; set; }
         [Required]
-        public string State { get; set; }
+        [RegularExpression(@"^(?-i:A[LKSZRAEP]|C[AOT]|D[EC]|F[LM]|G[AU]|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])$", ErrorMessage = "Please enter a valid state abbreviation")]
+public string State { get; set; }
         [Required]
         [DataType(DataType.PostalCode)]
         [Display(Name = "Zip Code")]
