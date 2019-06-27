@@ -17,3 +17,6 @@ Employees can edit products by clicking on the 'details' view of any product, an
 
 ### Deleting Products
 Employees can delete products by clicking on the 'details' view of any product and clicking on the link to delete.  They will be presented with a confirmation screen asking them if they are sure they want to delete this product.  If they click 'submit' the product will be archived in the database.
+
+## Producers
+Employees can add producers to the database by navigating to the 'Producers' tab in the nav bar and clicking on the affordance  to add a new producer.  Enter all the information for the producer and click 'submit'.  Note:  Adding an image is option but all other fields are required.  Zipcode, email and phone have specific required formats.

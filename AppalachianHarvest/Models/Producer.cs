@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,9 +21,13 @@ namespace AppalachianHarvest.Models
 
         public string LastName { get; set; }
         [NotMapped]
+        [Display(Name = "Name")]
+
         public string FullName { get { return this.FirstName + " " + this.LastName; } }
 
         [Required]
+        [Display(Name = "Business Name")]
+
         public string BusinessName { get; set; }
 
         [Required]
@@ -51,6 +56,9 @@ namespace AppalachianHarvest.Models
         {
             IsActive = true;
         }
+
+        [NotMapped]
+        public IFormFile ImageUpload { get; set; }
 
         public ICollection<Product> Products { get; set; }
     }

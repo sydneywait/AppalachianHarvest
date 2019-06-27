@@ -284,5 +284,7 @@ namespace AppalachianHarvest.Data
         }
 
         public DbSet<AppalachianHarvest.Models.Product> Product { get; set; }
+
+        public DbSet<AppalachianHarvest.Models.Producer> Producer { get; set; }
     }
 }
