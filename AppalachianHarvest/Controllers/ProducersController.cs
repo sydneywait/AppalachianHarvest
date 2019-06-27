@@ -15,12 +15,16 @@ namespace AppalachianHarvest.Controllers
     public class ProducersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context2;
+
         private readonly IHostingEnvironment _hostingEnvironment;
 
 
-        public ProducersController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
+        public ProducersController(ApplicationDbContext context, ApplicationDbContext context2, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _context2 = context2;
+
             _hostingEnvironment = hostingEnvironment;
 
         }
@@ -103,8 +107,10 @@ namespace AppalachianHarvest.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProducerId,FirstName,LastName,BusinessName,Phone,Email,Address,City,State,ZipCode,ProducerImage,IsActive")] Producer producer)
+        public async Task<IActionResult> Edit(int id, [Bind("ProducerId,FirstName,LastName,BusinessName,Phone,Email,Address,City,State,ZipCode,ImageUpload,IsActive")]Producer producer)
         {
+
+            
             if (id != producer.ProducerId)
             {
                 return NotFound();
@@ -114,6 +120,21 @@ namespace AppalachianHarvest.Controllers
             {
                 try
                 {
+
+                    if (producer.ImageUpload != null)
+                    {
+                        //Store the image in a temp location as it comes back from the uploader
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await producer.ImageUpload.CopyToAsync(memoryStream);
+                            producer.ProducerImage = memoryStream.ToArray();
+                        }
+                    }
+                    else
+                    {
+                        var p = await _context2.Producer.FindAsync(id);
+                        producer.ProducerImage = p.ProducerImage;
+                    }
                     _context.Update(producer);
                     await _context.SaveChangesAsync();
                 }
@@ -157,7 +178,8 @@ namespace AppalachianHarvest.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var producer = await _context.Producer.FindAsync(id);
-            _context.Producer.Remove(producer);
+            producer.IsActive = false;
+            _context.Producer.Update(producer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
