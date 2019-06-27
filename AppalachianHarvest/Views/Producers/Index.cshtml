@@ -13,7 +13,7 @@
 </p>
 
  
-<div class="card-deck">
+<div class="card-container">
     @foreach (var item in Model)
     {
         var imgSrc = Url.Content("Images/farmPlaceholder.jpg");
@@ -25,10 +25,8 @@
             var base64 = Convert.ToBase64String(item.ProducerImage);
             imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
-
-
         }
-        <div class="card">
+        <div class="card producer-card">
             <div class="card-header">
                 <img class="card-img-top" src="@imgSrc" alt="Card image cap">
             </div>
@@ -39,7 +37,7 @@
                     @item.Address<br>@item.City, @item.State @item.ZipCode
                 </p>
 
-                <a asp-action="Details" asp-route-id="@item.ProducerId">Details</a> 
+                <div class="card-details-link"><a asp-action="Details" asp-route-id="@item.ProducerId">Details</a> </div>
             </div>
         </div>
     }
