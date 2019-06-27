@@ -1,0 +1,44 @@
+﻿@model IEnumerable<AppalachianHarvest.Models.Producer>
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Producers</h1>
+
+<p>
+    <a asp-action="Create">Add a Producer</a>
+</p>
+
+ 
+<div class="card-container">
+    @foreach (var item in Model)
+    {
+        var imgSrc = Url.Content("Images/farmPlaceholder.jpg");
+
+
+            @if (item.ProducerImage != null)
+        {
+
+            var base64 = Convert.ToBase64String(item.ProducerImage);
+            imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+        }
+        <div class="card producer-card">
+            <div class="card-header">
+                <img class="card-img-top" src="@imgSrc" alt="Card image cap">
+            </div>
+            <div class="card-block">
+                <h4 class="card-title">@item.BusinessName</h4>
+                <p class="card-text">@item.FullName</p>
+                <p class="card-text">
+                    @item.Address<br>@item.City, @item.State @item.ZipCode
+                </p>
+
+                <div class="card-details-link"><a asp-action="Details" asp-route-id="@item.ProducerId">Details</a> </div>
+            </div>
+        </div>
+    }
+</div>
