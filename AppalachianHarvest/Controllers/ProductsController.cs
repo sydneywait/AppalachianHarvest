@@ -56,8 +56,10 @@ namespace AppalachianHarvest.Controllers
             CreateEditProductViewModel productModel = new CreateEditProductViewModel();
 
 
-            AddDropdowns(productModel);
-            
+            productModel.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
+            productModel.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"), "product type");
+            productModel.Shelves = Add0Dropdown(new SelectList(_context.Set<Shelf>(), "ShelfId", "Description"), "product location");
+
             return View(productModel);
         }
 
@@ -68,6 +70,10 @@ namespace AppalachianHarvest.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateEditProductViewModel productModel)
         {
+
+            //ModelState.Remove(productModel.Product.Name);
+            //ModelState.Remove(productModel.Product.Producer);
+
             if (ModelState.IsValid)
             {
 
@@ -86,8 +92,9 @@ namespace AppalachianHarvest.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            AddDropdowns(productModel);
-          
+            productModel.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
+            productModel.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"), "product type");
+            productModel.Shelves = Add0Dropdown(new SelectList(_context.Set<Shelf>(), "ShelfId", "Description"), "product location");
 
             return View(productModel);
 
@@ -110,8 +117,9 @@ namespace AppalachianHarvest.Controllers
 
             CreateEditProductViewModel productModel = new CreateEditProductViewModel();
             productModel.Product = product;
-            AddDropdowns(productModel);
-
+            productModel.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
+            productModel.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"), "product type");
+            productModel.Shelves = Add0Dropdown(new SelectList(_context.Set<Shelf>(), "ShelfId", "Description"), "product location");
             return View(productModel);
         }
 
@@ -157,8 +165,9 @@ namespace AppalachianHarvest.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            AddDropdowns(productModel);
-
+            productModel.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
+            productModel.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"), "product type");
+            productModel.Shelves = Add0Dropdown(new SelectList(_context.Set<Shelf>(), "ShelfId", "Description"), "product location");
             return View(productModel);
         }
 

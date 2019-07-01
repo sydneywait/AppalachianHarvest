@@ -9,6 +9,7 @@ using AppalachianHarvest.Data;
 using AppalachianHarvest.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using AppalachianHarvest.Models.ViewModels;
 
 namespace AppalachianHarvest.Controllers
 {
@@ -99,7 +100,9 @@ namespace AppalachianHarvest.Controllers
             {
                 return NotFound();
             }
-            return View(producer);
+            EditProducerViewModel producerModel = new EditProducerViewModel();
+            producerModel.Producer = producer;
+            return View(producerModel);
         }
 
         // POST: Producers/Edit/5
@@ -107,11 +110,11 @@ namespace AppalachianHarvest.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProducerId,FirstName,LastName,BusinessName,Phone,Email,Address,City,State,ZipCode,ImageUpload,IsActive")]Producer producer)
+        public async Task<IActionResult> Edit(int id, EditProducerViewModel producerModel)
         {
 
             
-            if (id != producer.ProducerId)
+            if (id != producerModel.Producer.ProducerId)
             {
                 return NotFound();
             }
@@ -121,26 +124,22 @@ namespace AppalachianHarvest.Controllers
                 try
                 {
 
-                    if (producer.ImageUpload != null)
+                    if (producerModel.Producer.ImageUpload != null)
                     {
                         //Store the image in a temp location as it comes back from the uploader
                         using (var memoryStream = new MemoryStream())
                         {
-                            await producer.ImageUpload.CopyToAsync(memoryStream);
-                            producer.ProducerImage = memoryStream.ToArray();
+                            await producerModel.Producer.ImageUpload.CopyToAsync(memoryStream);
+                            producerModel.Producer.ProducerImage = memoryStream.ToArray();
                         }
                     }
-                    else
-                    {
-                        var p = await _context2.Producer.FindAsync(id);
-                        producer.ProducerImage = p.ProducerImage;
-                    }
-                    _context.Update(producer);
+                 
+                    _context.Update(producerModel.Producer);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProducerExists(producer.ProducerId))
+                    if (!ProducerExists(producerModel.Producer.ProducerId))
                     {
                         return NotFound();
                     }
@@ -151,7 +150,7 @@ namespace AppalachianHarvest.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(producer);
+            return View(producerModel.Producer);
         }
 
         // GET: Producers/Delete/5
