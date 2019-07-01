@@ -72,8 +72,8 @@ namespace AppalachianHarvest.Controllers
         {
 
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
 
                 if (productModel.Product.ImageUpload!= null)
                 {
@@ -83,16 +83,15 @@ namespace AppalachianHarvest.Controllers
                         await productModel.Product.ImageUpload.CopyToAsync(memoryStream);
                         productModel.Product.Image = memoryStream.ToArray();
                     }
-                }
-
                 _context.Add(productModel.Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            productModel.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
-            productModel.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"), "product type");
-            productModel.Shelves = Add0Dropdown(new SelectList(_context.Set<Shelf>(), "ShelfId", "Description"), "product location");
+
+            //}
+
+            AddDropdowns(productModel);
 
             return View(productModel);
 
