@@ -4,16 +4,18 @@
 
 @{
     ViewData["Title"] = "Details";
+    var imgSrc = Url.Content("https://localhost:5001/Images/productPlaceholder.jpg");
 }
 
-    <h1>
-        @if (Model.IsOrganic == true)
-        {
-            var imgSrc2 = Url.Content("https://localhost:5001/Images/organic-icon.png");
 
-            <img class="productImgThumb" style="width:50px" src="@imgSrc2" />
-        }Product Details
-    </h1>
+<h1>
+    @if (Model.IsOrganic == true)
+    {
+        var imgSrc2 = Url.Content("https://localhost:5001/Images/organic-icon.png");
+
+        <img class="productImgThumb" style="width:50px" src="@imgSrc2" />
+    }Product Details
+</h1>
 
 <div>
     <hr />
@@ -26,12 +28,11 @@
             {
 
                 var base64 = Convert.ToBase64String(Model.Image);
-                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
-
-                <img class="productImgThumb" style="width:150px" src="@imgSrc" />
             }
-           
+            <img class="productImgThumb" style="width:150px" src="@imgSrc" />
+
         </dt>
         <dd class="col-sm-10">
 
