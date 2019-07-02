@@ -9,16 +9,20 @@ using AppalachianHarvest.Data;
 using AppalachianHarvest.Models;
 using AppalachianHarvest.Models.ViewModels;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace AppalachianHarvest.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ProductsController(ApplicationDbContext context)
+
+        public ProductsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Products
@@ -45,6 +49,8 @@ namespace AppalachianHarvest.Controllers
             {
                 return NotFound();
             }
+            TimeSpan expirationTime = TimeSpan.FromDays(Convert.ToDouble(product.ProductType.TimeToExpire));
+            product.ExpirationDate = product.Added.Add(expirationTime);
 
             return View(product);
         }

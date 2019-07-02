@@ -48,6 +48,8 @@ namespace AppalachianHarvest.Models
 
         public bool IsOrganic { get; set; }
         [Required]
+        [Display(Name = "Is Active")]
+
         public bool IsActive { get; set; }
         public Product()
         {

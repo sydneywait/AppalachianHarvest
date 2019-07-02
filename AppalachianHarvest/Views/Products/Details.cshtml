@@ -1,27 +1,41 @@
 ﻿@model AppalachianHarvest.Models.Product
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+
 
 @{
     ViewData["Title"] = "Details";
+    var imgSrc = Url.Content("https://localhost:5001/Images/productPlaceholder.jpg");
 }
 
-<h1>Product Details</h1>
+
+<h1>
+    @if (Model.IsOrganic == true)
+    {
+        var imgSrc2 = Url.Content("https://localhost:5001/Images/organic-icon.png");
+
+        <img class="productImgThumb" style="width:50px" src="@imgSrc2" />
+    }Product Details
+</h1>
 
 <div>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
+
+
+
             @if (Model.Image != null)
             {
 
                 var base64 = Convert.ToBase64String(Model.Image);
-                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
-
-                <img class="productImgThumb" style="width:150px" src="@imgSrc" />
             }
+            <img class="productImgThumb" style="width:150px" src="@imgSrc" />
+
         </dt>
         <dd class="col-sm-10">
-           
+
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
@@ -36,10 +50,16 @@
             @Html.DisplayFor(model => model.Producer.BusinessName)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductType)
+            @Html.DisplayNameFor(model => model.Added)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductType.Description)
+            @Html.DisplayFor(model => model.Added)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ExpirationDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.ExpirationDate.ToShortDateString()
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Shelf)
@@ -59,26 +79,13 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Price)
         </dd>
-       
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IsOrganic)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IsOrganic)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IsActive)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.IsActive)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Added)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Added)
-        </dd>
+
     </dl>
 </div>
 <div>
