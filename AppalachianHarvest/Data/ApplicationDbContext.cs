@@ -12,6 +12,14 @@ namespace AppalachianHarvest.Data
 
     {
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Producer> Producers { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderProduct> OrderProduct { get; set; }
+        public DbSet<ProductType> ProductTypes { get; set; }
+        public DbSet<Shelf> Shelves { get; set; }
+
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
@@ -283,6 +291,5 @@ namespace AppalachianHarvest.Data
 
         }
 
-        public DbSet<AppalachianHarvest.Models.Product> Product { get; set; }
     }
 }

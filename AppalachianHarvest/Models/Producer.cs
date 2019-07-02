@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -51,6 +52,8 @@ namespace AppalachianHarvest.Models
         {
             IsActive = true;
         }
+        [NotMapped]
+        public IFormFile ImageUpload { get; set; }
 
         public ICollection<Product> Products { get; set; }
     }
