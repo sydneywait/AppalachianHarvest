@@ -20,3 +20,9 @@ Employees can delete products by clicking on the 'details' view of any product a
 
 ## Producers
 Employees can add producers to the database by navigating to the 'Producers' tab in the nav bar and clicking on the affordance  to add a new producer.  Enter all the information for the producer and click 'Create'.  Note:  Adding an image is option but all other fields are required.  Zipcode, email and phone have specific required formats.  On the index page, producers are displayed as cards.
+
+### Editing Producers
+Employees can edit producers by clicking on the 'details' view of any producer, and clicking on the link to edit.  They will be presented with a form that is pre-populated with information about the producer.  They can change any of the details on that form and then click 'submit' to record the changes.
+
+### Deleting Producers
+Employees can delete producers by clicking on the 'details' view of any producer and clicking on the link to delete.  They will be presented with a confirmation screen asking them if they are sure they want to delete this producer.  If they click 'submit' the producer will be archived in the database.

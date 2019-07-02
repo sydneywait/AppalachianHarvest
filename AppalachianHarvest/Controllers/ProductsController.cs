@@ -24,7 +24,7 @@ namespace AppalachianHarvest.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Product.Include(p => p.Producer).Include(p => p.ProductType).Include(p => p.Shelf);
+            var applicationDbContext = _context.Products.Include(p => p.Producer).Include(p => p.ProductType).Include(p => p.Shelf);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,7 +36,7 @@ namespace AppalachianHarvest.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
+            var product = await _context.Products
                 .Include(p => p.Producer)
                 .Include(p => p.ProductType)
                 .Include(p => p.Shelf)
@@ -57,7 +57,7 @@ namespace AppalachianHarvest.Controllers
 
 
             AddDropdowns(productModel);
-            
+
             return View(productModel);
         }
 
@@ -68,8 +68,10 @@ namespace AppalachianHarvest.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateEditProductViewModel productModel)
         {
-            if (ModelState.IsValid)
-            {
+
+
+            //if (ModelState.IsValid)
+            //{
 
                 if (productModel.Product.ImageUpload!= null)
                 {
@@ -79,15 +81,17 @@ namespace AppalachianHarvest.Controllers
                         await productModel.Product.ImageUpload.CopyToAsync(memoryStream);
                         productModel.Product.Image = memoryStream.ToArray();
                     }
-                }
 
+                productModel.Product.Producer = null;
                 _context.Add(productModel.Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
+
+            //}
+
             AddDropdowns(productModel);
-          
 
             return View(productModel);
 
@@ -102,7 +106,7 @@ namespace AppalachianHarvest.Controllers
             }
 
 
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -111,7 +115,6 @@ namespace AppalachianHarvest.Controllers
             CreateEditProductViewModel productModel = new CreateEditProductViewModel();
             productModel.Product = product;
             AddDropdowns(productModel);
-
             return View(productModel);
         }
 
@@ -127,8 +130,8 @@ namespace AppalachianHarvest.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     if (productModel.Product.ImageUpload != null)
@@ -141,6 +144,7 @@ namespace AppalachianHarvest.Controllers
                         }
                     }
 
+                productModel.Product.Producer = null;
                     _context.Update(productModel.Product);
                     await _context.SaveChangesAsync();
                 }
@@ -156,10 +160,9 @@ namespace AppalachianHarvest.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            AddDropdowns(productModel);
-
-            return View(productModel);
+            //}
+            //AddDropdowns(productModel);
+            //return View(productModel);
         }
 
         // GET: Products/Delete/5
@@ -170,7 +173,7 @@ namespace AppalachianHarvest.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
+            var product = await _context.Products
                 .Include(p => p.Producer)
                 .Include(p => p.ProductType)
                 .Include(p => p.Shelf)
@@ -188,16 +191,16 @@ namespace AppalachianHarvest.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Products.FindAsync(id);
             product.IsActive = false;
-            _context.Product.Update(product);
+            _context.Products.Update(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-            return _context.Product.Any(e => e.ProductId == id);
+            return _context.Products.Any(e => e.ProductId == id);
         }
 
         public void AddDropdowns(CreateEditProductViewModel productModel)
