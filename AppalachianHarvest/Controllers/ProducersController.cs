@@ -33,7 +33,7 @@ namespace AppalachianHarvest.Controllers
         // GET: Producers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Producer.ToListAsync());
+            return View(await _context.Producers.ToListAsync());
         }
 
         // GET: Producers/Details/5
@@ -44,7 +44,7 @@ namespace AppalachianHarvest.Controllers
                 return NotFound();
             }
 
-            var producer = await _context.Producer
+            var producer = await _context.Producers
                 .FirstOrDefaultAsync(m => m.ProducerId == id);
             if (producer == null)
             {
@@ -95,7 +95,7 @@ namespace AppalachianHarvest.Controllers
                 return NotFound();
             }
 
-            var producer = await _context.Producer.FindAsync(id);
+            var producer = await _context.Producers.FindAsync(id);
             if (producer == null)
             {
                 return NotFound();
@@ -161,7 +161,7 @@ namespace AppalachianHarvest.Controllers
                 return NotFound();
             }
 
-            var producer = await _context.Producer
+            var producer = await _context.Producers
                 .FirstOrDefaultAsync(m => m.ProducerId == id);
             if (producer == null)
             {
@@ -176,16 +176,16 @@ namespace AppalachianHarvest.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var producer = await _context.Producer.FindAsync(id);
+            var producer = await _context.Producers.FindAsync(id);
             producer.IsActive = false;
-            _context.Producer.Update(producer);
+            _context.Producers.Update(producer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProducerExists(int id)
         {
-            return _context.Producer.Any(e => e.ProducerId == id);
+            return _context.Producers.Any(e => e.ProducerId == id);
         }
     }
 }

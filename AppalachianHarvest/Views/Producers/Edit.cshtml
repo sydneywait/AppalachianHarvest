@@ -59,10 +59,7 @@
                 <span asp-validation-for="Producer.ZipCode" class="text-danger"></span>
             </div>
 
-            @*<div class="form-group">
-                <label asp-for="ProducerImage" class="control-label"></label>
-                <input hidden readonly value="@Model.ProducerImage" class="form-control" />
-            </div>*@
+           
 
             <div>
 
@@ -82,9 +79,9 @@
 
             </div>
             <div class="form-group">
-                <br>
-                <label>Upload or change your profile image:</label>
-                <input type="file" name="ImageUpload" asp-for="Producer.ImageUpload">
+                <label asp-for="Producer.ImageUpload" class="control-label"></label>
+                <input asp-for="Producer.ImageUpload" class="form-control" id="ImageUpload" />
+                <span asp-validation-for="Producer.ProducerImage" class="text-danger"></span>
             </div>
 
             <div class="form-group form-check">
