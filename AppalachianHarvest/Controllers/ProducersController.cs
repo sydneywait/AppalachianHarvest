@@ -194,5 +194,39 @@ namespace AppalachianHarvest.Controllers
         {
             return _context.Producers.Any(e => e.ProducerId == id);
         }
+
+        // GET: Producers/Reports
+        public async Task<IActionResult> Reports()
+        {
+            ProducerReportViewModel report = new ProducerReportViewModel();
+
+            report.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
+
+            return View(report);
+        }
+
+       
+        public static SelectList Add0Dropdown(SelectList selectList, string optionType)
+        {
+
+            SelectListItem firstItem = new SelectListItem()
+            {
+                Text = $"Select a { optionType }"
+            };
+            List<SelectListItem> newList = selectList.ToList();
+            newList.Insert(0, firstItem);
+
+            var selectedItem = newList.FirstOrDefault(item => item.Selected);
+            var selectedItemValue = String.Empty;
+            if (selectedItem != null)
+            {
+                selectedItemValue = selectedItem.Value;
+            }
+
+            return new SelectList(newList, "Value", "Text", selectedItemValue);
+        }
+
+
+
     }
 }
