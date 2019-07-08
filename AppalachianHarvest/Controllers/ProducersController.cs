@@ -201,7 +201,7 @@ namespace AppalachianHarvest.Controllers
             ProducerReportViewModel report = new ProducerReportViewModel();
 
             report.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
-
+            report.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"), "product type");
             return View(report);
         }
 

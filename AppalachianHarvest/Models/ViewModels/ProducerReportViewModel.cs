@@ -16,11 +16,14 @@ namespace AppalachianHarvest.Models.ViewModels
         [Display(Name = "Select a Producer")]
         public Producer selectedProducer { get; set; }
         public SelectList Producers { get; set; }
+        public ProductType selectedProductType { get; set; }
+
+        public SelectList ProductTypes { get; set; }
+
         public double TotalSales { get; set; }
         public double TotalLosses { get; set; }
         public Product MostPopular { get; set; }
         public Product LeastPopular { get; set; }
-        public SelectList ProductTypes { get; set; }
 
         public ICollection<Product> soldProducts { get; set; }
         public ICollection<Product> expiredProducts { get; set; }
