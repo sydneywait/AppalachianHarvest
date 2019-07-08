@@ -70,70 +70,88 @@
             @Html.DisplayFor(model => model.IsActive)
         </dd>
     </dl>
+
     <h4>Products:</h4>
-    <table class="table" style="width:50%">
+   @{
+       List<Product> unexpiredProducts = new List<Product>(); 
+       }
 
-        <thead>
-            <tr>
-                
-                <th>
-                    Name
-                </th>
-                <th>
-                    Qty.
-                </th>
-                <th>
-                    Price
-                </th>
-                <th>
-                    Date Added
-                </th>
-                <th>
-                    Expiration
-                </th>
-            </tr>
-        </thead>
+    @foreach (Product product in Model.Products){
+        if (product.ExpirationDate >= DateTime.Now) {
 
-        <tbody>
-            @foreach (Product product in Model.Products)
-            {
-                if (product.ExpirationDate >= DateTime.Now)
-                {
+            unexpiredProducts.Add(product);
+        }
+    }
+
+        @if (unexpiredProducts.Count() > 0)
+        {
+            <table class="table" style="width:50%">
+
+                <thead>
                     <tr>
-                        
-                        <td>
-                            @if (product.IsOrganic == true)
-                            {
-                                var imgSrc2 = Url.Content("https://localhost:5001/Images/organic-icon.png");
 
-                                <img class="productImgThumb" style="width:15px" src="@imgSrc2" />
-                            }
-                            @Html.ActionLink(product.Name, "Details", "Products", new { Id = product.ProductId }, null)
-                        </td>
-
-
-                        <td>
-                            @Html.DisplayFor(modelItem => product.Quantity)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => product.Price)
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(modelItem => product.Added)
-                        </td>
-                        <td>
-                            @product.ExpirationDate.ToShortDateString()
-                        </td>
-
-
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Qty.
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Date Added
+                        </th>
+                        <th>
+                            Expiration
+                        </th>
                     </tr>
+                </thead>
 
-                }
-            }
-        </tbody>
-        </table>
+                <tbody>
+                    @foreach (Product product in unexpiredProducts)
+                    {                        
+                            <tr>
 
+                                <td>
+                                    @Html.ActionLink(product.Name, "Details", "Products", new { Id = product.ProductId }, null)
+
+                                    @if (product.IsOrganic == true)
+                                    {
+                                        var imgSrc2 = Url.Content("https://localhost:5001/Images/organic-icon.png");
+
+                                        <img class="productImgThumb" style="width:15px" src="@imgSrc2" />
+                                    }
+
+                                </td>
+
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => product.Quantity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => product.Price)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => product.Added)
+                                </td>
+                                <td>
+                                    @product.ExpirationDate.ToShortDateString()
+                                </td>
+
+
+                            </tr>
+
+                        
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No products currently in market</p>
+        }
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.ProducerId">Edit</a> |

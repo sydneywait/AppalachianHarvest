@@ -20,6 +20,7 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
+               
                 @Html.DisplayNameFor(model => model.Producer)
             </th>
 
@@ -63,7 +64,7 @@
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.Producer.BusinessName)
+                    @Html.ActionLink(item.Producer.BusinessName, "Details", "Producers", new { Id = item.ProducerId }, null)
                 </td>
 
                 <td>
@@ -78,7 +79,7 @@
                     {
                         var imgSrc = Url.Content("https://localhost:5001/Images/organic-icon.png");
 
-                        <img class="productImgThumb" style="width:40px" src="@imgSrc" />
+                        <img class="productImgThumb" style="width:30px" src="@imgSrc" />
                     }
                 </td>
 
