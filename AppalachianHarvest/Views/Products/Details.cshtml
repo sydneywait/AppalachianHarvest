@@ -47,7 +47,7 @@
             @Html.DisplayNameFor(model => model.Producer)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Producer.BusinessName)
+            @Html.ActionLink(Model.Producer.BusinessName, "Details", "Producers", new { Id = Model.Producer.ProducerId }, null)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Added)

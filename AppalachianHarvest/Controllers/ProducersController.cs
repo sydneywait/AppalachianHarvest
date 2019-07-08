@@ -45,10 +45,17 @@ namespace AppalachianHarvest.Controllers
             }
 
             var producer = await _context.Producers
+                .Include(p=>p.Products)
+                .ThenInclude(pr=>pr.ProductType)
                 .FirstOrDefaultAsync(m => m.ProducerId == id);
             if (producer == null)
             {
                 return NotFound();
+            }
+            foreach (Product product in producer.Products)
+            {
+                TimeSpan expirationTime = TimeSpan.FromDays(Convert.ToDouble(product.ProductType.TimeToExpire));
+                product.ExpirationDate = product.Added.Add(expirationTime);
             }
 
             return View(producer);
