@@ -48,6 +48,7 @@ namespace AppalachianHarvest.Data
             user.PasswordHash = passwordHash.HashPassword(user, "Admin8*");
             modelBuilder.Entity<ApplicationUser>().HasData(user);
 
+
             modelBuilder.Entity<Order>()
                 .Property(b => b.OrderDate)
                 .HasDefaultValueSql("GETDATE()");
@@ -251,7 +252,8 @@ namespace AppalachianHarvest.Data
                      IsActive = true,
                      Added = DateTime.Now
 
-                 });
+                 }                
+                 );
 
             modelBuilder.Entity<Order>().HasData(
                new Order()
