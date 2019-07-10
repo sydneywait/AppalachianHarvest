@@ -10,6 +10,8 @@ using AppalachianHarvest.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using AppalachianHarvest.Models.ViewModels;
+using AppalachianHarvest.Models.SubModels;
+
 
 namespace AppalachianHarvest.Controllers
 {
@@ -196,12 +198,63 @@ namespace AppalachianHarvest.Controllers
         }
 
         // GET: Producers/Reports
-        public async Task<IActionResult> Reports()
+        public async Task<IActionResult> Reports(ProducerReportViewModel report)
         {
-            ProducerReportViewModel report = new ProducerReportViewModel();
 
             report.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
             report.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"), "product type");
+
+
+            var OrderProducts = await _context.OrderProduct
+                .Include(op=>op.Product)
+                .ThenInclude(p=>p.ProductType)
+                .Include(op=>op.Order)
+                .ToListAsync();
+
+
+            if(report.selectedProducer != null) {
+
+                var ProductsThisProducer = await _context.Products.Where(p => p.ProducerId == report.selectedProducer.ProducerId).ToListAsync();
+                var PTheseDates = ProductsThisProducer.Where(p => p.Added <= report.EndDate && p.Added >= report.StartDate);
+
+                var OPThisProducer = OrderProducts.Where(op => op.Product.ProducerId == report.selectedProducer.ProducerId);
+                var OPTheseDates = OPThisProducer.Where(op => op.Order.OrderDate <= report.EndDate && op.Order.OrderDate >= report.StartDate);
+
+
+
+                foreach (OrderProduct op in OPTheseDates)
+                  {
+                    if(report.soldProducts.Any(pr => pr.Product.ProductId == op.ProductId))
+                    {
+                        ProductReport thisProductReport = report.soldProducts
+                            .FirstOrDefault(pr => pr.Product.ProductId == op.ProductId);
+                        thisProductReport.Sold += 1;
+                    }
+                    else
+                    {
+                        ProductReport ProductReport = new ProductReport();
+                        report.soldProducts.Add(ProductReport);
+                    }
+                    
+                    report.TotalSales += op.Product.Price;
+                
+                    
+            }
+
+            foreach(Product p in PTheseDates)
+            {
+
+
+            }
+
+            
+
+                
+                
+
+            }
+
+
             return View(report);
         }
 

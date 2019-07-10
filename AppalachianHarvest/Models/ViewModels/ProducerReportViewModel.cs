@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using AppalachianHarvest.Models.SubModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,7 +26,7 @@ namespace AppalachianHarvest.Models.ViewModels
         public Product MostPopular { get; set; }
         public Product LeastPopular { get; set; }
 
-        public ICollection<Product> soldProducts { get; set; }
+        public ICollection<ProductReport> soldProducts { get; set; }        
         public ICollection<Product> expiredProducts { get; set; }
         public ICollection<Order> Orders { get; set; }
 

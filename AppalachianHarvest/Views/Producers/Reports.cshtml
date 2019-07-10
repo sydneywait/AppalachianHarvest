@@ -1,11 +1,13 @@
 ﻿@model AppalachianHarvest.Models.ViewModels.ProducerReportViewModel
 
-    @{
+@{
     ViewData["Title"] = "Reports";
-    }
+}
 
-    <h1>Reports</h1>
+<h1>Reports</h1>
+<form asp-action="Reports">
     <div class="report-header">
+
 
         <div class="form-group producer-select">
             <label asp-for="selectedProducer" class="control-label"> </label>
@@ -13,12 +15,12 @@
             <span asp-validation-for="selectedProducer.ProducerId" class="text-danger"></span>
 
         </div>
-        <div class="form-group product-select">
-            <label asp-for="selectedProductType" class="control-label"> </label>
-            <select asp-for="selectedProductType.ProductTypeId" class="form-control" asp-items="Model.ProductTypes"></select>
-            <span asp-validation-for="selectedProductType.ProductTypeId" class="text-danger"></span>
+        @*<div class="form-group product-select">
+                <label asp-for="selectedProductType" class="control-label"> </label>
+                <select asp-for="selectedProductType.ProductTypeId" class="form-control" asp-items="Model.ProductTypes"></select>
+                <span asp-validation-for="selectedProductType.ProductTypeId" class="text-danger"></span>
 
-        </div>
+            </div>*@
         <div class="form-group date-select">
             @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label" })
             @Html.TextBoxFor(model => model.StartDate, new { @type="date", @class = "form-control datepicker",  @Value = Model.StartDate.ToString("yyyy-MM-dd") } )
@@ -31,13 +33,78 @@
             @Html.TextBoxFor(model => model.EndDate, new { @type="date", @class = "form-control datepicker",  @Value = Model.EndDate.ToString("yyyy-MM-dd") } )
             @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
         </div>
+        <div class="form-group">
+            <input type="submit" value="submit" class="btn btn-primary" />
+        </div>
     </div>
 
+</form>
+
+<h3>All Orders</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+                <p>Order Id</p>
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @*@foreach (Order order in Model.Orders)*@
+        {
+
+        <tr>
+
+            <td>
+                <p>Order ID</p>
+            </td>
+            <td>
+                @*@foreach (OrderProduct op in order.OrderProducts){
+
+                    <p>@op.Product.Name</p>
+                    <p>@op.Product.Price</p>
+
+                    }*@
+
+
+            </td>
+
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+
 <h3>Total Sales</h3>
+@if(Model.selectedProducer.ProducerId!=0){
+<p>Sales @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()</p>
+@Model.TotalSales
+}
+else{
+<p class="select-msg">Select a Producer and timeframe</p>
+}
 
 <h3>Total Losses</h3>
+@if(Model.selectedProducer.ProducerId!=0){
+<p>Sales @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()</p>
+@Model.TotalLosses
+}
+else{
+<p class="select-msg">Select a Producer and timeframe</p>
+}
 
 <h3>Most Popular Product</h3>
-  
+@if(Model.selectedProducer.ProducerId!=0){
+<p>Sales @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()</p>
+@Model.MostPopular
+}
+else{
+<p class="select-msg">Select a Producer and timeframe</p>
+}
+
 
 
