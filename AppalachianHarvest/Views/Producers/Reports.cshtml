@@ -45,32 +45,32 @@
     <thead>
         <tr>
             <th>
+                Product
             </th>
             <th>
-                <p>Order Id</p>
+                Starting Qty
+            </th>
+            <th>
+                Qty Sold
+            </th>
+            <th>
+                Qty Expired
             </th>
 
         </tr>
     </thead>
     <tbody>
-        @*@foreach (Order order in Model.Orders)*@
+        @foreach (var PR in Model.soldProducts)
         {
 
         <tr>
 
-            <td>
-                <p>Order ID</p>
-            </td>
-            <td>
-                @*@foreach (OrderProduct op in order.OrderProducts){
-
-                    <p>@op.Product.Name</p>
-                    <p>@op.Product.Price</p>
-
-                    }*@
+            <td>@PR.Product.Name</td>
+            <td>@PR.Product.Quantity</td>
+            <td>@PR.Sold</td>
+            <td>@PR.Expired</td>
 
 
-            </td>
 
         </tr>
         }
@@ -79,27 +79,24 @@
 
 
 
-<h3>Total Sales</h3>
+<h4>Total Sales</h4>
 @if(Model.selectedProducer.ProducerId!=0){
-<p>Sales @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()</p>
-@Model.TotalSales
+<span>$</span>@Model.TotalSales
 }
 else{
 <p class="select-msg">Select a Producer and timeframe</p>
 }
 
-<h3>Total Losses</h3>
+<h4>Total Losses</h4>
 @if(Model.selectedProducer.ProducerId!=0){
-<p>Sales @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()</p>
-@Model.TotalLosses
+<span>$</span>@Model.TotalLosses
 }
 else{
 <p class="select-msg">Select a Producer and timeframe</p>
 }
 
-<h3>Most Popular Product</h3>
+<h4>Most Popular Product</h4>
 @if(Model.selectedProducer.ProducerId!=0){
-<p>Sales @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()</p>
 @Model.MostPopular
 }
 else{

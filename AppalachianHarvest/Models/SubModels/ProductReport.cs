@@ -10,6 +10,7 @@ namespace AppalachianHarvest.Models.SubModels
         public Product Product { get; set; }
         
         public int Sold { get; set; }
-        
+        public int Expired { get; set; }
+
     }
 }

@@ -26,8 +26,8 @@ namespace AppalachianHarvest.Models.ViewModels
         public Product MostPopular { get; set; }
         public Product LeastPopular { get; set; }
 
-        public ICollection<ProductReport> soldProducts { get; set; }        
-        public ICollection<Product> expiredProducts { get; set; }
+        public List<ProductReport> soldProducts { get; set; } = new List<ProductReport>();
+        public List<Product> expiredProducts { get; set; }
         public ICollection<Order> Orders { get; set; }
 
 

@@ -221,18 +221,41 @@ namespace AppalachianHarvest.Controllers
                 var OPTheseDates = OPThisProducer.Where(op => op.Order.OrderDate <= report.EndDate && op.Order.OrderDate >= report.StartDate);
 
 
+                //ICollection<ProductReport> soldProducts = new ICollection<ProductReport>();
 
                 foreach (OrderProduct op in OPTheseDates)
                   {
-                    if(report.soldProducts.Any(pr => pr.Product.ProductId == op.ProductId))
+                     
+                    if(report.soldProducts!= null && report.soldProducts.Any(pr => pr.Product.ProductId == op.ProductId))
                     {
                         ProductReport thisProductReport = report.soldProducts
                             .FirstOrDefault(pr => pr.Product.ProductId == op.ProductId);
+                        report.soldProducts.Remove(thisProductReport);
                         thisProductReport.Sold += 1;
+
+                        //Calculate the time to expire for this product
+                        TimeSpan expirationTime = TimeSpan.FromDays(Convert.ToDouble(thisProductReport.Product.ProductType.TimeToExpire));
+
+                        thisProductReport.Product.ExpirationDate = thisProductReport.Product.Added.Add(expirationTime);
+
+                        if (thisProductReport.Product.ExpirationDate < report.EndDate)
+                        {
+                            //TODO if expiration date has passed, add expiration quantity
+                            thisProductReport.Expired = thisProductReport.Product.Quantity - thisProductReport.Sold;
+                        }
+                        else
+                        {
+                            thisProductReport.Expired = 0;
+                        }
+                        report.soldProducts.Add(thisProductReport);
+                        var count = report.soldProducts.Count();
+                        
                     }
                     else
                     {
                         ProductReport ProductReport = new ProductReport();
+                        ProductReport.Product = op.Product;
+                        ProductReport.Sold = 1;
                         report.soldProducts.Add(ProductReport);
                     }
                     
