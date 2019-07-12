@@ -142,6 +142,12 @@ namespace AppalachianHarvest.Controllers
                             producerModel.Producer.ProducerImage = memoryStream.ToArray();
                         }
                     }
+                    else
+                    {
+                        var imageFromDatabase = await _context.Producers.AsNoTracking()
+                       .FirstOrDefaultAsync(a => a.ProducerId == id);
+                        producerModel.Producer.ProducerImage = imageFromDatabase.ProducerImage;
+                    }
                  
                     _context.Update(producerModel.Producer);
                     await _context.SaveChangesAsync();
@@ -225,19 +231,24 @@ namespace AppalachianHarvest.Controllers
 
                 foreach (OrderProduct op in OPTheseDates)
                   {
+                    //Calculate the time to expire for this product
+
+                    TimeSpan expirationTime = TimeSpan.FromDays(Convert.ToDouble(op.Product.ProductType.TimeToExpire));
+                     op.Product.ExpirationDate = op.Product.Added.Add(expirationTime);
+
                      
-                    if(report.soldProducts!= null && report.soldProducts.Any(pr => pr.Product.ProductId == op.ProductId))
+
+
+                    if (report.soldProducts!= null && report.soldProducts.Any(pr => pr.Product.ProductId == op.ProductId))
                     {
                         ProductReport thisProductReport = report.soldProducts
                             .FirstOrDefault(pr => pr.Product.ProductId == op.ProductId);
                         report.soldProducts.Remove(thisProductReport);
                         thisProductReport.Sold += 1;
 
-                        //Calculate the time to expire for this product
-                        TimeSpan expirationTime = TimeSpan.FromDays(Convert.ToDouble(thisProductReport.Product.ProductType.TimeToExpire));
+                        //TimeSpan expirationTime = TimeSpan.FromDays(Convert.ToDouble(thisProductReport.Product.ProductType.TimeToExpire));
 
-                        thisProductReport.Product.ExpirationDate = thisProductReport.Product.Added.Add(expirationTime);
-
+                        //thisProductReport.Product.ExpirationDate = thisProductReport.Product.Added.Add(expirationTime);
                         if (thisProductReport.Product.ExpirationDate < report.EndDate)
                         {
                             //TODO if expiration date has passed, add expiration quantity
@@ -247,6 +258,7 @@ namespace AppalachianHarvest.Controllers
                         {
                             thisProductReport.Expired = 0;
                         }
+
                         report.soldProducts.Add(thisProductReport);
                         var count = report.soldProducts.Count();
                         
@@ -256,6 +268,17 @@ namespace AppalachianHarvest.Controllers
                         ProductReport ProductReport = new ProductReport();
                         ProductReport.Product = op.Product;
                         ProductReport.Sold = 1;
+
+                        if (ProductReport.Product.ExpirationDate < report.EndDate)
+                        {
+                            //TODO if expiration date has passed, add expiration quantity
+                            ProductReport.Expired = ProductReport.Product.Quantity - ProductReport.Sold;
+                        }
+                        else
+                        {
+                            ProductReport.Expired = 0;
+                        }
+
                         report.soldProducts.Add(ProductReport);
                     }
                     
