@@ -246,7 +246,7 @@ namespace AppalachianHarvest.Controllers
                         report.soldProducts.Remove(thisProductReport);
                         thisProductReport.Sold += 1;
 
-                        //TimeSpan expirationTime = TimeSpan.FromDays(Convert.ToDouble(thisProductReport.Product.ProductType.TimeToExpire));
+                       
 
                         //thisProductReport.Product.ExpirationDate = thisProductReport.Product.Added.Add(expirationTime);
                         if (thisProductReport.Product.ExpirationDate < report.EndDate)
@@ -286,11 +286,15 @@ namespace AppalachianHarvest.Controllers
                 
                     
             }
-
-            foreach(Product p in PTheseDates)
+            int countPopular = 0;
+            foreach(ProductReport pr in report.soldProducts)
             {
-
-
+                    report.TotalLosses += pr.Expired * pr.Product.Price;
+                    int productCount = pr.Sold;
+                    if (productCount > countPopular)
+                    {
+                        report.MostPopular = pr.Product;
+                    }
             }
 
             
