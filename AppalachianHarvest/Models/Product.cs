@@ -51,10 +51,7 @@ namespace AppalachianHarvest.Models
         [Display(Name = "Is Active")]
 
         public bool IsActive { get; set; }
-        public Product()
-        {
-            IsActive = true;
-        }
+        
 
         [Required]
         [DataType(DataType.Date)]
@@ -65,8 +62,15 @@ namespace AppalachianHarvest.Models
         [NotMapped]
         [Display(Name = "Expires")]
         public DateTime ExpirationDate { get; set; }
+        
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
+
+        public Product()
+        {
+            IsActive = true;
+                        
+        }
 
     }
 }

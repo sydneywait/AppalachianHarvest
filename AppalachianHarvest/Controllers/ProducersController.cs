@@ -10,6 +10,8 @@ using AppalachianHarvest.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using AppalachianHarvest.Models.ViewModels;
+using AppalachianHarvest.Models.SubModels;
+
 
 namespace AppalachianHarvest.Controllers
 {
@@ -140,6 +142,12 @@ namespace AppalachianHarvest.Controllers
                             producerModel.Producer.ProducerImage = memoryStream.ToArray();
                         }
                     }
+                    else
+                    {
+                        var imageFromDatabase = await _context.Producers.AsNoTracking()
+                       .FirstOrDefaultAsync(a => a.ProducerId == id);
+                        producerModel.Producer.ProducerImage = imageFromDatabase.ProducerImage;
+                    }
                  
                     _context.Update(producerModel.Producer);
                     await _context.SaveChangesAsync();
@@ -194,5 +202,134 @@ namespace AppalachianHarvest.Controllers
         {
             return _context.Producers.Any(e => e.ProducerId == id);
         }
+
+        // GET: Producers/Reports
+        public async Task<IActionResult> Reports(ProducerReportViewModel report)
+        {
+
+            report.Producers = Add0Dropdown(new SelectList(_context.Set<Producer>(), "ProducerId", "BusinessName"), "producer");
+            report.ProductTypes = Add0Dropdown(new SelectList(_context.Set<ProductType>(), "ProductTypeId", "Description"), "product type");
+
+
+            var OrderProducts = await _context.OrderProduct
+                .Include(op=>op.Product)
+                .ThenInclude(p=>p.ProductType)
+                .Include(op=>op.Order)
+                .ToListAsync();
+
+
+            if(report.selectedProducer != null) {
+
+                var ProductsThisProducer = await _context.Products.Where(p => p.ProducerId == report.selectedProducer.ProducerId).ToListAsync();
+                var PTheseDates = ProductsThisProducer.Where(p => p.Added <= report.EndDate && p.Added >= report.StartDate);
+
+                var OPThisProducer = OrderProducts.Where(op => op.Product.ProducerId == report.selectedProducer.ProducerId);
+                var OPTheseDates = OPThisProducer.Where(op => op.Order.OrderDate <= report.EndDate && op.Order.OrderDate >= report.StartDate);
+
+
+                //ICollection<ProductReport> soldProducts = new ICollection<ProductReport>();
+
+                foreach (OrderProduct op in OPTheseDates)
+                  {
+                    //Calculate the time to expire for this product
+
+                    TimeSpan expirationTime = TimeSpan.FromDays(Convert.ToDouble(op.Product.ProductType.TimeToExpire));
+                     op.Product.ExpirationDate = op.Product.Added.Add(expirationTime);
+
+                     
+
+
+                    if (report.soldProducts!= null && report.soldProducts.Any(pr => pr.Product.ProductId == op.ProductId))
+                    {
+                        ProductReport thisProductReport = report.soldProducts
+                            .FirstOrDefault(pr => pr.Product.ProductId == op.ProductId);
+                        report.soldProducts.Remove(thisProductReport);
+                        thisProductReport.Sold += 1;
+
+                       
+
+                        //thisProductReport.Product.ExpirationDate = thisProductReport.Product.Added.Add(expirationTime);
+                        if (thisProductReport.Product.ExpirationDate < report.EndDate)
+                        {
+                            //TODO if expiration date has passed, add expiration quantity
+                            thisProductReport.Expired = thisProductReport.Product.Quantity - thisProductReport.Sold;
+                        }
+                        else
+                        {
+                            thisProductReport.Expired = 0;
+                        }
+
+                        report.soldProducts.Add(thisProductReport);
+                        var count = report.soldProducts.Count();
+                        
+                    }
+                    else
+                    {
+                        ProductReport ProductReport = new ProductReport();
+                        ProductReport.Product = op.Product;
+                        ProductReport.Sold = 1;
+
+                        if (ProductReport.Product.ExpirationDate < report.EndDate)
+                        {
+                            //TODO if expiration date has passed, add expiration quantity
+                            ProductReport.Expired = ProductReport.Product.Quantity - ProductReport.Sold;
+                        }
+                        else
+                        {
+                            ProductReport.Expired = 0;
+                        }
+
+                        report.soldProducts.Add(ProductReport);
+                    }
+                    
+                    report.TotalSales += op.Product.Price;
+                
+                    
+            }
+            int countPopular = 0;
+            foreach(ProductReport pr in report.soldProducts)
+            {
+                    report.TotalLosses += pr.Expired * pr.Product.Price;
+                    int productCount = pr.Sold;
+                    if (productCount > countPopular)
+                    {
+                        report.MostPopular = pr.Product;
+                    }
+            }
+
+            
+
+                
+                
+
+            }
+
+
+            return View(report);
+        }
+
+       
+        public static SelectList Add0Dropdown(SelectList selectList, string optionType)
+        {
+
+            SelectListItem firstItem = new SelectListItem()
+            {
+                Text = $"Select a { optionType }"
+            };
+            List<SelectListItem> newList = selectList.ToList();
+            newList.Insert(0, firstItem);
+
+            var selectedItem = newList.FirstOrDefault(item => item.Selected);
+            var selectedItemValue = String.Empty;
+            if (selectedItem != null)
+            {
+                selectedItemValue = selectedItem.Value;
+            }
+
+            return new SelectList(newList, "Value", "Text", selectedItemValue);
+        }
+
+
+
     }
 }

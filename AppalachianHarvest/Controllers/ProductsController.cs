@@ -149,6 +149,12 @@ namespace AppalachianHarvest.Controllers
                             productModel.Product.Image = memoryStream.ToArray();
                         }
                     }
+                else
+                {
+                    var imageFromDatabase = await _context.Products.AsNoTracking()
+                   .FirstOrDefaultAsync(a => a.ProductId == id);
+                    productModel.Product.Image = imageFromDatabase.Image;
+                }
 
                 productModel.Product.Producer = null;
                     _context.Update(productModel.Product);

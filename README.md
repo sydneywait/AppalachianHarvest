@@ -29,3 +29,6 @@ Employees can edit producers by clicking on the 'details' view of any producer, 
 
 ### Deleting Producers
 Employees can delete producers by clicking on the 'details' view of any producer and clicking on the link to delete.  They will be presented with a confirmation screen asking them if they are sure they want to delete this producer.  If they click 'submit' the producer will be archived in the database.
+
+## Reports
+Employees can view reports about the producers and their products by clicking on the 'Reports' tab in the navbar.  Selecting a producer and a date range (start date and end date) will allow the employee to view orders that the producer fulfilled, their total sales for that time period as well as their total losses.  Additionally, the employee can see the producer's most popular product based on the number sold.
