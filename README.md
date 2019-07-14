@@ -1,5 +1,9 @@
 # Appalachian Harvest
 
+![logo](https://)
+
+
+
 Welcome to Appalachian Harvest.  This application is for employees of Appalachian Harvest to add, edit and delete producers and products for this year-round farmer's market.
 
 ## Getting Started
