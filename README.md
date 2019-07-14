@@ -1,7 +1,6 @@
 # Appalachian Harvest
 
-![logo](Images/AppalachianHarvestLogo.png)
-
+<img src="https://github.com/sydneywait/AppalachianHarvest/blob/demo/AppalachianHarvestLogo.png" width="300px">
 
 Welcome to Appalachian Harvest.  This application is for employees of Appalachian Harvest to add, edit and delete producers and products for this year-round farmer's market.
 
