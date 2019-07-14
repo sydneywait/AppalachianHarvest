@@ -1,7 +1,7 @@
 # Appalachian Harvest
 
 <img src="https://github.com/sydneywait/AppalachianHarvest/blob/demo/AppalachianHarvestLogo.png" width="300px">
->*image credit: [David Bird](https://github.com/BatsGoScreechh "David's Github)*
+image credit: [David Bird](https://github.com/BatsGoScreechh)
 
 
 
