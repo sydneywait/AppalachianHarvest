@@ -1,10 +1,6 @@
 # Appalachian Harvest
 
 <img src="https://github.com/sydneywait/AppalachianHarvest/blob/demo/AppalachianHarvestLogo.png" width="300px">
-image credit: [David Bird](https://github.com/BatsGoScreechh)
-
-
-
 
 Welcome to Appalachian Harvest.  This application is for employees of Appalachian Harvest to add, edit and delete producers and products for this year-round farmer's market.
 
@@ -38,3 +34,7 @@ Employees can delete producers by clicking on the 'details' view of any producer
 
 ## Reports
 Employees can view reports about the producers and their products by clicking on the 'Reports' tab in the navbar.  Selecting a producer and a date range (start date and end date) will allow the employee to view orders that the producer fulfilled, their total sales for that time period as well as their total losses.  Additionally, the employee can see the producer's most popular product based on the number sold.
+
+### 
+Logo credit: [David Bird](https://github.com/BatsGoScreechh "David's Github")
+
